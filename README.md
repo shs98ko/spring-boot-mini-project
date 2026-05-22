@@ -5,17 +5,23 @@
 
 ***URL Mapping***
 
-**[HomeController]**
+**[EmotionController]**
 
 / -> Home  
+
+***REST API Controller***
+
+**[EmotionApiController]**
+
+/api/emotions → POST
+/api/emotions/recent → GET
+/api/emotions/statistics → GET
+
+**[UserController]**
 
 /join -> Join 
 
 /login -> Login 
-
-/search -> Search
-
-**[UserController]**
 
 /users/{id} -> See Profile 
 
@@ -37,13 +43,9 @@
 
 /articles/create -> Create article
 
+/articles/search -> Search
+
 ***REST API Controller***
-
-**[EmotionApiController]**
-
-/api/emotions → POST
-/api/emotions/recent → GET
-/api/emotions/statistics → GET
 
 **[AritcleApiController]**
 
