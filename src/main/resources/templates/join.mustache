@@ -1,0 +1,38 @@
+{{>layouts/header}}
+    <h1>{{pageTitle}}</h1>
+
+    {{#errorMessage}}
+        <h2>{{errorMessage}}</h2>
+    {{/errorMessage}}
+
+    <form method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input name="name" placeholder="Name" type="text" class="form-control" id="name">
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">ID</label>
+            <input name="username" placeholder="ID" type="text" class="form-control" id="username" >
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input name="email" placeholder="Email" type="email" class="form-control" id="email" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input name="password" placeholder="Password" type="password" class="form-control" id="password">
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Confirm Password</label>
+            <input name="password2" placeholder="Confirm Password" type="password" class="form-control" id="password2">
+        </div>
+        <button type="submit" class="btn btn-primary">회원가입</button>
+    </form>
+
+    <div class="mb-3">
+        <span>이미 회원이신가요?</span>
+        <a href="/login">로그인 &rarr;</a>
+    </div>
+
+
+{{>layouts/footer}}
