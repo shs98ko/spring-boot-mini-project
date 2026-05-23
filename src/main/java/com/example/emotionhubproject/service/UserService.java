@@ -39,8 +39,19 @@ public class UserService {
         save.logInfo();
     }
 
-    public void login(LoginForm form) {
+    public UserEntity login(LoginForm loginForm) {
         // 로그인 로직
+        UserEntity user = userRepository.findByUsername(loginForm.getUsername());
+        //ID 존재여부 체크
+        if(user == null){
+            throw new ErrorMessageException("An account with username does not exist");
+        }
+        //비밀번호 존재 여부 체크
+        if(!user.getPassword().equals(loginForm.getPassword())){
+            throw new ErrorMessageException("Wrong password.");
+        }
+        user.logInfo();
+        return user;
     }
 
 }
