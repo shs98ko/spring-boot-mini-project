@@ -23,15 +23,26 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Community</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">My page</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/join">Sign Up</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Log in</a>
-                </li>
+
+                {{#loggedIn}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">글쓰기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/users/logout">Log Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">My page</a>
+                    </li>
+                {{/loggedIn}}
+                {{^loggedIn}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/join">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Log in</a>
+                    </li>
+                {{/loggedIn}}
 <!--                <li class="nav-item dropdown">-->
 <!--                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
 <!--                        Dropdown-->

@@ -30,5 +30,5 @@ public class UserEntity {
         this.password= password;
     }
     public void logInfo(){
-        log.info("User Stored in DB=> id: {}, name: {},username:{}, email:{}, password:{}",id, name,username, email, password);}
+        log.info("User=> id: {}, name: {},username:{}, email:{}, password:{}",id, name,username, email, password);}
 }

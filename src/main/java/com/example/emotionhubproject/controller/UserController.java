@@ -12,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.net.http.HttpRequest;
-
 @Controller
 public class UserController {
 
@@ -76,5 +74,13 @@ public class UserController {
             return "login";
         }
     }
+
+    @GetMapping("/users/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+        return "redirect:/";
+    }
+
 
 }
