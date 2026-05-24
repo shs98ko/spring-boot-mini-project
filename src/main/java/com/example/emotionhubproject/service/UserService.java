@@ -34,7 +34,7 @@ public class UserService {
                OR email = ?
         )*/
         //DTO-> Entity로 변환 -> Repository를 통해 DB로 Entity를 저장
-        UserEntity user   = new UserEntity(joinForm.getName(),joinForm.getUsername(),joinForm.getEmail(), joinForm.getPassword());
+        UserEntity user   = new UserEntity(joinForm.getName(),joinForm.getUsername(),joinForm.getEmail(), joinForm.getPassword(),null);
         UserEntity save = userRepository.save(user);
         save.logInfo();
     }

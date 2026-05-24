@@ -1,0 +1,18 @@
+{{>layouts/header}}
+<h1>오늘의 감정 기록하기</h1>
+
+<form action="/articles/post" method="post">
+    <div>
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" placeholder="오늘의 감정을 한 줄로 표현해 보세요">
+    </div>
+    <br>
+    <div>
+        <label for="content">내용</label>
+        <textarea id="content" name="content" rows="5" placeholder="무슨 일이 있었는지 자유롭게 적어주세요"></textarea>
+    </div>
+    <br>
+    <button type="submit">등록하기</button>
+    <a href="/articles">취소</a>
+</form>
+{{>layouts/footer}}

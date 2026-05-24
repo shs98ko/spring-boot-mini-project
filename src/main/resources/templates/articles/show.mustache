@@ -1,0 +1,21 @@
+{{>layouts/header}}
+{{#errorMessage}}
+    <h2>{{errorMessage}}</h2>
+{{/errorMessage}}
+<table class="table">
+    <thead>
+    <tr><th>Id</th><th>Title</th><th>Content</th></tr>
+    </thead>
+    <tbody>
+    {{#article}}
+        <tr>
+            <th>{{id}}</th><td>{{title}}</td><td>{{content}}</td>
+        </tr>
+    {{/article}}
+    </tbody>
+</table>
+<a href="/articles">목록 페이지</a>
+<a href="/articles/{{article.id}}/edit" class="btn btn-primary">Edit</a>
+<a href="/articles/{{article.id}}/delete" class="btn btn-primary">Delete</a>
+
+{{>layouts/footer}}

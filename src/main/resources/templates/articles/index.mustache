@@ -1,0 +1,37 @@
+{{>layouts/header}}
+<div class="container" style="max-width: 800px;">
+    <h3 class="mb-4">게시판</h3>
+
+    <table class="table table-hover text-center border-top border-2 border-dark">
+        <thead class="table-light">
+        <tr>
+            <th style="width: 15%;">ID</th>
+            <th style="width: 55%;">제목</th>
+            <th style="width: 30%;">내용</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#articleList}}
+            <tr>
+                <td>{{id}}</td>
+                <td><a href="/articles/{{id}}">{{title}}</a></td>
+                <td><a href="/articles/{{id}}">{{content}}</a></td>
+            </tr>
+        {{/articleList}}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="/articles/post" class="btn btn-secondary">새 글 작성</a>
+
+        <form action="/articles/search" method="get" class="d-flex">
+            <select name="type" class="form-select me-2" style="width: 100px;">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+            </select>
+            <input type="text" name="keyword" class="form-control me-2" placeholder="검색어 입력">
+            <button type="submit" class="btn btn-outline-dark" style="white-space: nowrap;">검색</button>
+        </form>
+    </div>
+</div>
+{{>layouts/footer}}

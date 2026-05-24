@@ -22,12 +22,14 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name, username, email, password;
+    Long articleId;
 
-    public UserEntity(String name, String username, String email, String password) {
+    public UserEntity(String name, String username, String email, String password, Long articleId) {
         this.name = name;
         this.username =username;
         this.email = email;
         this.password= password;
+        this.articleId = articleId;
     }
     public void logInfo(){
         log.info("User=> id: {}, name: {},username:{}, email:{}, password:{}",id, name,username, email, password);}
