@@ -1,7 +1,9 @@
 {{>layouts/header}}
+
 {{#errorMessage}}
-    <h2>{{errorMessage}}</h2>
+    <div class="alert alert-danger">{{errorMessage}}</div>
 {{/errorMessage}}
+
 <table class="table">
     <thead>
     <tr><th>Id</th><th>Title</th><th>Content</th></tr>
@@ -15,7 +17,9 @@
     </tbody>
 </table>
 <a href="/articles">목록 페이지</a>
-<a href="/articles/{{article.id}}/edit" class="btn btn-primary">Edit</a>
-<a href="/articles/{{article.id}}/delete" class="btn btn-primary">Delete</a>
+{{#article}}
+    <a href="/articles/{{id}}/edit" class="btn btn-primary">Edit</a>
+    <a href="/articles/{{id}}/delete" class="btn btn-danger">Delete</a>
+{{/article}}
 
 {{>layouts/footer}}

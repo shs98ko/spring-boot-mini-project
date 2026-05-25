@@ -1,7 +1,11 @@
 {{>layouts/header}}
 
+{{#errorMessage}}
+    <div class="alert alert-danger">{{errorMessage}}</div>
+{{/errorMessage}}
+
 {{#article}}
-    <form action="/articles/edit" method="post">
+    <form action="/articles/{{id}}/edit" method="post">
         <input  type="hidden" id="id" name="id" value="{{id}}"/>
         <div>
             <label class="form-label" for="title">제목</label>

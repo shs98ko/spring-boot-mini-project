@@ -39,13 +39,20 @@ public class ArticleController {
     }
     //글쓰기
     @GetMapping("/post")
-    public String getNewArticle(Model model, HttpServletRequest request) {
+    public String getNewArticle(Model model, HttpServletRequest request,RedirectAttributes redirectAttributes) {
 
         HttpSession session =request.getSession(false);
+        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+            return "redirect:/articles";
+        }
         UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
         if(loginUser==null){
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
             return "redirect:/articles";
+
         }
 
         model.addAttribute("pageTitle","Create Articles");
@@ -53,12 +60,18 @@ public class ArticleController {
     }
     //글 DB저장
     @PostMapping("/post")
-    public String postNewArticle(ArticleForm articleForm, HttpServletRequest request) {
+    public String postNewArticle(ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         HttpSession session =request.getSession(false);
+        //세션 먼저 체크 (로그인 안한경우)
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+            return "redirect:/articles";
+        }
         UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
         if(loginUser==null){
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
             return "redirect:/articles";
         }
 
@@ -85,18 +98,24 @@ public class ArticleController {
     public String getEdit(HttpServletRequest request, @PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
 
         HttpSession session = request.getSession(false);
+        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+            return "redirect:/articles";
+        }
         UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
         //로그인 접근 제한
         if (loginUser == null){
             return "redirect:/articles";
         }
+
         try {
             Article article = articleService.getArticle(id);
             //본인게시글 접근 제한
             if (!articleService.isOwner(article, loginUser.getId())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
-                return "redirect:/articles";
+                return "redirect:/articles/"+id;
             }
             model.addAttribute("pageTitle", "Edit: " + article.getTitle());
             model.addAttribute("article", article);
@@ -107,14 +126,18 @@ public class ArticleController {
         }
     }
     @PostMapping("/{id}/edit")
-    public String postEdit(HttpServletRequest request,ArticleUpdateDto articleUpdateDto,RedirectAttributes redirectAttributes){
-
+    public String postEdit(@PathVariable Long id,HttpServletRequest request,ArticleUpdateDto articleUpdateDto,RedirectAttributes redirectAttributes){
         HttpSession session = request.getSession(false);
+        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+            return "redirect:/articles";
+        }
         UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
         //로그인 접근 제한
         if (loginUser == null){
-            return "redirect:/articles";
+            return "redirect:/articles"+id;
         }
         try {
             Article article = articleService.getUpdateArticle(articleUpdateDto, loginUser);
@@ -122,7 +145,7 @@ public class ArticleController {
 
         }catch (ErrorMessageException e){
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/articles";
+            return "redirect:/articles/"+id;
         }
     }
 
@@ -130,6 +153,11 @@ public class ArticleController {
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+            return "redirect:/articles";
+        }
         UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
         //로그인 접근 제한
@@ -142,7 +170,7 @@ public class ArticleController {
             redirectAttributes.addFlashAttribute("successMessage", "삭제되었습니다.");
             return "redirect:/articles";
         }catch (ErrorMessageException e){
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/articles/"+id;
         }
 
