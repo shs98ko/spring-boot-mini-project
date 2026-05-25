@@ -1,10 +1,9 @@
 {{>layouts/header}}
 
 {{#errorMessage}}
-    <div class="alert alert-danger">{{errorMessage}}</div>
+    <div class="alert alert-danger">{{.}}</div>
 {{/errorMessage}}
-
-<table class="table">
+<table class="table"  id="articleContainer" data-id="{{article.id}}" >
     <thead>
     <tr><th>Id</th><th>Title</th><th>Content</th></tr>
     </thead>
@@ -21,5 +20,28 @@
     <a href="/articles/{{id}}/edit" class="btn btn-primary">Edit</a>
     <a href="/articles/{{id}}/delete" class="btn btn-danger">Delete</a>
 {{/article}}
+{{#loggedIn}}
+    <div >
+        <form class id="commentForm">
+            <textarea cols="50" rows="10" placeholder="Write comment..."></textarea>
+            <button>Add Comment</button>
+        </form>
+    </div>
+{{/loggedIn}}
+
+<div class="article__comments">
+    <ul>
+        {{#comments}}
+            <li data-id="{{id}}">
+                <span> {{text}}</span>
+                {{#canDelete}}
+                    <span class="deleteBtn">❌</span>
+                {{/canDelete}}
+            </li>
+        {{/comments}}
+    </ul>
+</div>
+
 
 {{>layouts/footer}}
+<script src="/js/commentSection.js"></script>

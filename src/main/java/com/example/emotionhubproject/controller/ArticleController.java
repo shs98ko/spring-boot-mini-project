@@ -7,6 +7,7 @@ import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.repository.ArticleRepository;
 import com.example.emotionhubproject.service.ArticleService;
+import com.example.emotionhubproject.service.CommentService;
 import com.example.emotionhubproject.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -26,6 +30,7 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final CommentService commentService;
 
     // 목록
     @GetMapping({""})
@@ -34,7 +39,6 @@ public class ArticleController {
 
         model.addAttribute("pageTitle", "Articles");
         model.addAttribute("articleList", articleList);
-
         return "articles/index";
     }
     //글쓰기
@@ -81,11 +85,20 @@ public class ArticleController {
 
     //게시물 하나 조회하기
     @GetMapping("/{id}")
-    public String showArticle(@PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
+    public String showArticle(HttpServletRequest request, @PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
         try {
+            HttpSession session = request.getSession(false); // 세션 없으면 null 반환 (새로 만들지 않음)
+            UserEntity loginUser = session != null ? (UserEntity) session.getAttribute("user") : null; // 세션 null이면 loginUser도 null
+            boolean loggedIn = loginUser != null; // false
+
             Article article = articleService.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
+
+            List<Map<String,Object>> comments = commentService.getComments(id, loginUser);
+            model.addAttribute("comments", comments);
+            model.addAttribute("loggedIn", loggedIn);
+
             return "articles/show";
         } catch (ErrorMessageException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());

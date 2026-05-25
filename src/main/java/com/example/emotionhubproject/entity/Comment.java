@@ -19,4 +19,13 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    private Long userId;
+    private Long articleId;
+    private String text;
+
+    public Comment(Long userId, Long articleId, String text) {
+        this.userId = userId;
+        this.articleId =articleId;
+        this.text = text;
+    }
 }
