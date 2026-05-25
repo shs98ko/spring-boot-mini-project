@@ -1,3 +1,109 @@
 {{>layouts/header}}
-<h1>{{pageTitle}}</h1>
+<div class="container mt-5">
+
+
+
+    <div class="card p-4 mb-4">
+
+        <h2>{{pageTitle}}오늘의 감정 기록</h2>
+
+        <form action="/save"
+              method="post">
+
+            <input name="emotion"
+                   class="form-control mb-3"
+                   placeholder="감정 입력">
+
+            <textarea name="content"
+                      class="form-control mb-3"
+                      placeholder="내용 작성"></textarea>
+
+            <button class="btn btn-primary w-100">
+
+                저장
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+
+
+    <div class="card p-4 mb-4">
+
+        <h2>추천 문장</h2>
+
+        <p>
+
+            {{recommendMessage}}
+
+        </p>
+
+    </div>
+
+
+    <div class="card p-4 mb-4">
+
+        <h2>최근 7일 감정 흐름</h2>
+
+        <p>
+            점수 흐름 :
+            {{flowMessage}}
+        </p>
+
+        <p>
+            {{flowResult}}
+        </p>
+
+    </div>
+
+
+    <div class="card p-4 mb-4">
+
+        <h2>가장 많이 나온 감정</h2>
+
+        <p>
+            {{topEmotion}}
+        </p>
+
+    </div>
+
+
+
+    <div class="card p-4 mb-4">
+
+        <h2>감정 목록</h2>
+
+        {{#diaryList}}
+
+            <div class="border p-3 mb-3 rounded">
+
+                <h4>
+
+                    {{emotion}}
+
+                </h4>
+
+                <p>
+
+                    점수 : {{score}}
+
+                </p>
+
+                <p>
+
+                    {{content}}
+
+                </p>
+
+            </div>
+
+        {{/diaryList}}
+
+    </div>
+
+</div>
 {{>layouts/footer}}
