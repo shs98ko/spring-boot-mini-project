@@ -14,11 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ArticleForm {
     private String title;
     private String content;
-    private Long userId;
 
-    public Article toEntity(){
-        return new Article(title, content, userId);
-    }
 
     public void logInfo(){
         log.info("Article Form => title: {}, content: {}",title,content);

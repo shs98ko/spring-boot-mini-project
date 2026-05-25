@@ -26,13 +26,11 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
-    @Autowired
-    private ArticleRepository articleRepository;
 
     // 목록
     @GetMapping({""})
     public String index(Model model) {
-        List<Article> articleList = articleService.getArticles();
+        List<Article> articleList = articleService.getAllArticles();
 
         model.addAttribute("pageTitle", "Articles");
         model.addAttribute("articleList", articleList);
@@ -41,29 +39,44 @@ public class ArticleController {
     }
     //글쓰기
     @GetMapping("/post")
-    public String getPost(Model model) {
+    public String getNewArticle(Model model, HttpServletRequest request) {
+
+        HttpSession session =request.getSession(false);
+        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+
+        if(loginUser==null){
+            return "redirect:/articles";
+        }
+
         model.addAttribute("pageTitle","Create Articles");
         return "articles/new";
     }
     //글 DB저장
     @PostMapping("/post")
-    public String postUpload(ArticleForm form) {
-        Article article = form.toEntity();
-        articleRepository.save(article);
+    public String postNewArticle(ArticleForm articleForm, HttpServletRequest request) {
+
+        HttpSession session =request.getSession(false);
+        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+
+        if(loginUser==null){
+            return "redirect:/articles";
+        }
+
+        articleService.postArticle(articleForm, loginUser);
         return "redirect:/articles";
     }
 
     //게시물 하나 조회하기
     @GetMapping("/{id}")
-    public String showArticle(@PathVariable Long id ,Model model){
+    public String showArticle(@PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
         try {
             Article article = articleService.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
             return "articles/show";
         } catch (ErrorMessageException e) {
-            model.addAttribute("error", e.getMessage());
-            return "404";
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/articles";
         }
     }
 
@@ -82,16 +95,15 @@ public class ArticleController {
             Article article = articleService.getArticle(id);
             //본인게시글 접근 제한
             if (!articleService.isOwner(article, loginUser.getId())) {
-                model.addAttribute("errorMessage", "Not authorized");
                 redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
                 return "redirect:/articles";
             }
             model.addAttribute("pageTitle", "Edit: " + article.getTitle());
             model.addAttribute("article", article);
-            return "/articles/edit";
+            return "articles/edit";
         }catch (ErrorMessageException e){
-            model.addAttribute("errorMessage", e.getMessage());
-            return "404";
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/articles/"+id;
         }
     }
     @PostMapping("/{id}/edit")
@@ -116,12 +128,24 @@ public class ArticleController {
 
 
     @GetMapping("/{id}/delete")
-    public String getRemove(@PathVariable Long id, Model model){
-        Article article = articleRepository.findById(id).orElse(null);
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
-        model.addAttribute("article", article);
+        //로그인 접근 제한
+        if (loginUser == null){
+            return "redirect:/articles";
+        }
 
-        return "articles/index";
+        try {
+            articleService.deleteArticle(id, loginUser.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "삭제되었습니다.");
+            return "redirect:/articles";
+        }catch (ErrorMessageException e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/articles/"+id;
+        }
+
     }
 
 }

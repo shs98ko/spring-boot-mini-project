@@ -1,13 +1,13 @@
 package com.example.emotionhubproject.service;
 
+import com.example.emotionhubproject.dto.ArticleForm;
 import com.example.emotionhubproject.dto.ArticleUpdateDto;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.repository.ArticleRepository;
-import jakarta.servlet.http.HttpSession;
+import com.example.emotionhubproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.h2.engine.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +16,13 @@ import java.util.List;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
+
     //게시물 전제 조회
-    public List<Article> getArticles() {
+    public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
+
     //게시물 조회
     public Article getArticle(Long id){
         return articleRepository.findById(id).orElseThrow(() -> new ErrorMessageException("Article not found."));
@@ -38,11 +41,27 @@ public class ArticleService {
                 .orElseThrow(()-> new ErrorMessageException("Article not found"));
 
         //본인확인
-        if(article.getUserId().equals(user.getId())){
+        if(!article.getUserId().equals(user.getId())){
             throw new ErrorMessageException("Not authorized");
         }
 
         article.patch(articleUpdateDto);
         return articleRepository.save(article);
+    }
+
+    public void postArticle(ArticleForm articleForm, UserEntity user){
+        Article article = new Article(articleForm.getTitle(),articleForm.getContent(),user.getId());
+        articleRepository.save(article);
+    }
+
+    public void deleteArticle(Long id, Long loginUserId) {
+        //게시물 조회
+        Article article = articleRepository.findById(id).orElseThrow(
+                () -> new ErrorMessageException("Article not found."));
+        //권한 제한
+        if(!article.getUserId().equals(loginUserId)){
+            throw new ErrorMessageException("Not authorized");
+        }
+        articleRepository.delete(article);
     }
 }
