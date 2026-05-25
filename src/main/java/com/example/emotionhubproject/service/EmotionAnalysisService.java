@@ -9,7 +9,7 @@ import java.util.List;
 public class EmotionAnalysisService {
 
     // 추천 문장
-    public static String recommendMessage(List<EmotionDiary> diaryList) {
+    public String recommendMessage(List<EmotionDiary> diaryList) {
         if (diaryList.isEmpty()) return "오늘의 감정을 기록해보세요.";
 
         String emotion = diaryList.get(diaryList.size() - 1).getEmotion();
@@ -27,7 +27,9 @@ public class EmotionAnalysisService {
     }
 
     // 감정 흐름
-    public static String flowMessage(List<EmotionDiary> diaryList) {
+    public String flowMessage(List<EmotionDiary> diaryList) {
+        if (diaryList.isEmpty()) return "";
+
         StringBuilder flowMessage = new StringBuilder();
         for (int i = 0; i < diaryList.size(); i++) {
             flowMessage.append(diaryList.get(i).getScore());
@@ -37,7 +39,7 @@ public class EmotionAnalysisService {
     }
 
     // 감정 흐름 분석
-    public static String flowResult(List<EmotionDiary> diaryList) {
+    public String flowResult(List<EmotionDiary> diaryList) {
         if (diaryList.size() < 2) return "감정 흐름을 분석중입니다.";
 
         int firstScore = diaryList.get(0).getScore();
@@ -49,16 +51,11 @@ public class EmotionAnalysisService {
     }
 
     // 가장 많이 나온 감정
-    public static String topEmotion(List<EmotionDiary> diaryList) {
+    public String topEmotion(List<EmotionDiary> diaryList) {
         if (diaryList.isEmpty()) return "아직 기록된 감정이 없어요.";
 
-        int happyCount = 0;
-        int excitingCount = 0;
-        int normalCount = 0;
-        int sadCount = 0;
-        int angryCount = 0;
-        int joyCount = 0;
-        int madCount = 0;
+        int happyCount = 0, excitingCount = 0, normalCount = 0;
+        int sadCount = 0, angryCount = 0, joyCount = 0, madCount = 0;
 
         for (EmotionDiary diary : diaryList) {
             String emotion = diary.getEmotion();
@@ -71,16 +68,32 @@ public class EmotionAnalysisService {
             else if (emotion.equals("화남")) madCount++;
         }
 
-        // 가장 큰 값 찾기
         int max = happyCount;
         String topEmotion = "행복";
 
-        if (excitingCount > max) { max = excitingCount; topEmotion = "신남"; }
-        if (normalCount > max)   { max = normalCount;   topEmotion = "평범"; }
-        if (sadCount > max)      { max = sadCount;       topEmotion = "우울"; }
-        if (angryCount > max)    { max = angryCount;     topEmotion = "분노"; }
-        if (joyCount > max)      { max = joyCount;       topEmotion = "기쁨"; }
-        if (madCount > max)      {                        topEmotion = "화남"; }
+        if (excitingCount > max) {
+            max = excitingCount;
+            topEmotion = "신남";
+        }
+        if (normalCount > max)   {
+            max = normalCount;
+            topEmotion = "평범";
+        }
+        if (sadCount > max)      {
+            max = sadCount;
+            topEmotion = "우울";
+        }
+        if (angryCount > max)    {
+            max = angryCount;
+            topEmotion = "분노";
+        }
+        if (joyCount > max)      {
+            max = joyCount;
+            topEmotion = "기쁨";
+        }
+        if (madCount > max)      {
+            topEmotion = "화남";
+        }
 
         return topEmotion;
     }

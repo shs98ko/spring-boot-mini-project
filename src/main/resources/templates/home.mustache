@@ -12,7 +12,7 @@
 
             <input name="emotion"
                    class="form-control mb-3"
-                   placeholder="감정 입력">
+                   placeholder="감정을 입력하세요 (행복 / 기쁨 / 신남 / 평범 / 우울 / 화남 / 분노)">
 
             <textarea name="content"
                       class="form-control mb-3"
@@ -63,10 +63,12 @@
     <div class="card p-4 mb-4">
 
         <h2>가장 많이 나온 감정</h2>
-
-        <p>
-            {{topEmotion}}
-        </p>
+        {{#showTopEmotion}}
+            <p>{{topEmotion}}</p>
+        {{/showTopEmotion}}
+        {{^showTopEmotion}}
+            <p>3개 이상 기록하면 나타나요!</p>
+        {{/showTopEmotion}}
 
     </div>
 
