@@ -91,10 +91,14 @@ public class ArticleController {
             UserEntity loginUser = session != null ? (UserEntity) session.getAttribute("user") : null; // 세션 null이면 loginUser도 null
             boolean loggedIn = loginUser != null; // false
 
+            //article
             Article article = articleService.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
+            boolean isOwner = loginUser != null && articleService.isOwner(article, loginUser.getId());
+            model.addAttribute("isOwner", isOwner);
 
+            //comment
             List<Map<String,Object>> comments = commentService.getComments(id, loginUser);
             model.addAttribute("comments", comments);
             model.addAttribute("loggedIn", loggedIn);
@@ -150,7 +154,7 @@ public class ArticleController {
 
         //로그인 접근 제한
         if (loginUser == null){
-            return "redirect:/articles"+id;
+            return "redirect:/articles/"+id;
         }
         try {
             Article article = articleService.getUpdateArticle(articleUpdateDto, loginUser);

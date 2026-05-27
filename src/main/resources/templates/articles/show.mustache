@@ -3,22 +3,31 @@
 {{#errorMessage}}
     <div class="alert alert-danger">{{.}}</div>
 {{/errorMessage}}
-<table class="table"  id="articleContainer" data-id="{{article.id}}" >
-    <thead>
-    <tr><th>Id</th><th>Title</th><th>Content</th></tr>
-    </thead>
-    <tbody>
-    {{#article}}
-        <tr>
-            <th>{{id}}</th><td>{{title}}</td><td>{{content}}</td>
-        </tr>
-    {{/article}}
-    </tbody>
-</table>
-<a href="/articles">목록 페이지</a>
+
 {{#article}}
-    <a href="/articles/{{id}}/edit" class="btn btn-primary">Edit</a>
-    <a href="/articles/{{id}}/delete" class="btn btn-danger">Delete</a>
+    <div class="container mt-4 mb-4" id="articleContainer" data-id="{{id}}">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h3 class="mb-0">{{title}}</h3>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">작성자: {{username}}</li>
+                <li class="list-group-item">작성일시: {{formattedCreatedAt}}</li>
+            </ul>
+            <div class="card-body">
+                <p class="card-text" style="white-space: pre-line; min-height: 200px;">{{content}}</p>
+            </div>
+        </div>
+    </div>
+{{/article}}
+
+<a href="/articles" class="btn btn-secondary">목록 페이지</a>
+<div></div>
+{{#article}}
+    {{#isOwner}}
+        <a href="/articles/{{id}}/edit" class="btn btn-primary">Edit</a>
+        <a href="/articles/{{id}}/delete" class="btn btn-danger">Delete</a>
+    {{/isOwner}}
 {{/article}}
 {{#loggedIn}}
     <div >
