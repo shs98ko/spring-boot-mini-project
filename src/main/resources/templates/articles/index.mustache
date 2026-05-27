@@ -24,17 +24,25 @@
     <table class="table table-hover text-center border-top border-2 border-dark">
         <thead class="table-light">
         <tr>
-            <th style="width: 15%;">ID</th>
-            <th style="width: 55%;">제목</th>
-            <th style="width: 30%;">내용</th>
+            <th style="width: 15%;">번호</th>
+            <th style="width: 25%;">제목</th>
+            <th style="width: 25%;">내용</th>
+            <th style="width: 20%;">작성자</th>
+            <th style="width: 15%;">작성일시</th>
         </tr>
         </thead>
         <tbody>
         {{#articleList}}
             <tr>
-                <td>{{id}}</td>
+                <td><span>{{id}}</span></td>
                 <td><a href="/articles/{{id}}">{{title}}</a></td>
-                <td><a href="/articles/{{id}}">{{content}}</a></td>
+                <td>
+                    <div style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <a href="/articles/{{id}}">{{content}}</a>
+                    </div>
+                </td>
+                <td><span>{{username}}</span></td>
+                <td><span>{{formattedCreatedAt}}</span></td>
             </tr>
         {{/articleList}}
         </tbody>

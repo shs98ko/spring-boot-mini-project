@@ -26,7 +26,6 @@ public class ArticleService {
     //게시물 조회
     public Article getArticle(Long id){
         return articleRepository.findById(id).orElseThrow(() -> new ErrorMessageException("Article not found."));
-
     }
     //본인확인여부
     public boolean isOwner(Article article,Long userId){
@@ -50,7 +49,7 @@ public class ArticleService {
     }
 
     public void postArticle(ArticleForm articleForm, UserEntity user){
-        Article article = new Article(articleForm.getTitle(),articleForm.getContent(),user.getId());
+        Article article = new Article(articleForm.getTitle(),articleForm.getContent(),user.getId(),user.getUsername());
         articleRepository.save(article);
     }
 
