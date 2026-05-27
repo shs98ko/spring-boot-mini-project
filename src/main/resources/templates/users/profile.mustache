@@ -1,0 +1,30 @@
+{{>layouts/header}}
+{{#user}}
+<h1>{{username}}님의 마이페이지</h1>
+<br>
+<h4>이름: {{name}}</h4>
+<br>
+<h4>이메일: {{email}}</h4>
+<br>
+<a href="/users/{{id}}/edit" class="btn btn-primary btn-sm"> 내 정보 수정하기</a>
+{{/user}}
+
+
+<h2>내 게시글</h2>
+{{#articles}}
+    <div>
+        <a href="/articles/{{id}}">
+            {{title}}
+        </a>
+        <small class="text-muted">{{FormattedCreatedAt}}</small>
+    </div>
+{{/articles}}
+
+<!--<h2>내 감정 기록</h2>-->
+<!--{{#emotions}}-->
+<!--    <div>-->
+<!--        {{emotion}}-->
+<!--    </div>-->
+<!--{{/emotions}}-->
+
+{{>layouts/footer}}

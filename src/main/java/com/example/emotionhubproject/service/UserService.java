@@ -2,16 +2,21 @@ package com.example.emotionhubproject.service;
 
 import com.example.emotionhubproject.dto.JoinForm;
 import com.example.emotionhubproject.dto.LoginForm;
+import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
+import com.example.emotionhubproject.repository.ArticleRepository;
 import com.example.emotionhubproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
 
     public void join(JoinForm joinForm) {
         // 회원가입 로직
@@ -52,6 +57,14 @@ public class UserService {
         }
         user.logInfo();
         return user;
+    }
+
+    public UserEntity getUserByUserId(Long id) {
+         return userRepository.findById(id).orElseThrow(() -> new ErrorMessageException("User not found"));
+    }
+
+    public List<Article> getArticlesByUserId(Long id){
+        return  articleRepository.findByUserId(id);
     }
 
 }

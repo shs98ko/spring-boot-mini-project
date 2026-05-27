@@ -28,9 +28,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/users/logout">Log Out</a>
                     </li>
+                    {{#loggedInUser}}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">My page</a>
+                        <a class="nav-link" href="/users/{{id}}">My page</a>
                     </li>
+                    {{/loggedInUser}}
                 {{/loggedIn}}
                 {{^loggedIn}}
                     <li class="nav-item">
