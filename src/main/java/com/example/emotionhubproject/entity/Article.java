@@ -1,6 +1,6 @@
 package com.example.emotionhubproject.entity;
 
-import com.example.emotionhubproject.dto.ArticleUpdateDto;
+import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -54,7 +53,7 @@ public class Article {
     public String getFormattedCreatedAt() {
         return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
-    public void patch(ArticleUpdateDto dto){
+    public void patch(ArticleUpdateForm dto){
         if(dto.getTitle() != null){
             this.title = dto.getTitle();
         }

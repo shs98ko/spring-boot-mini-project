@@ -1,7 +1,7 @@
 package com.example.emotionhubproject.service;
 
 import com.example.emotionhubproject.dto.ArticleForm;
-import com.example.emotionhubproject.dto.ArticleUpdateDto;
+import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
@@ -32,8 +32,8 @@ public class ArticleService {
         return article.getUserId().equals(userId);
     }
 
-    public Article getUpdateArticle(ArticleUpdateDto articleUpdateDto, UserEntity user){
-        Long updateFormId= articleUpdateDto.getId();
+    public Article getUpdateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
+        Long updateFormId= articleUpdateForm.getId();
 
         //게시글 조회
         Article article = articleRepository.findById(updateFormId)
@@ -44,7 +44,7 @@ public class ArticleService {
             throw new ErrorMessageException("Not authorized");
         }
 
-        article.patch(articleUpdateDto);
+        article.patch(articleUpdateForm);
         return articleRepository.save(article);
     }
 
@@ -62,5 +62,15 @@ public class ArticleService {
             throw new ErrorMessageException("Not authorized");
         }
         articleRepository.delete(article);
+    }
+    public List<Article> searchArticles(String keyword, String type) {
+        if (keyword == null || keyword.isBlank()) {
+            return getAllArticles();
+        }
+        if(type.equals("title")){
+            return articleRepository.findByTitleContaining(keyword);
+        } else {
+            return articleRepository.findByContentContaining(keyword);
+        }
     }
 }

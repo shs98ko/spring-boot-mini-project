@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @ToString
 @Slf4j
-public class ArticleUpdateDto {
+public class ArticleUpdateForm {
     private Long id;
     private String title;
     private String content;

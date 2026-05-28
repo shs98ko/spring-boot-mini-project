@@ -1,27 +1,24 @@
 package com.example.emotionhubproject.controller;
 
 import com.example.emotionhubproject.dto.ArticleForm;
-import com.example.emotionhubproject.dto.ArticleUpdateDto;
+import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
-import com.example.emotionhubproject.repository.ArticleRepository;
 import com.example.emotionhubproject.service.ArticleService;
 import com.example.emotionhubproject.service.CommentService;
-import com.example.emotionhubproject.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +36,9 @@ public class ArticleController {
 
         model.addAttribute("pageTitle", "Articles");
         model.addAttribute("articleList", articleList);
+        model.addAttribute("keyword", "");
+        model.addAttribute("isTitle", true);
+        model.addAttribute("isContent", false);
         return "articles/index";
     }
     //글쓰기
@@ -143,7 +143,7 @@ public class ArticleController {
         }
     }
     @PostMapping("/{id}/edit")
-    public String postEdit(@PathVariable Long id,HttpServletRequest request,ArticleUpdateDto articleUpdateDto,RedirectAttributes redirectAttributes){
+    public String postEdit(@PathVariable Long id, HttpServletRequest request, ArticleUpdateForm articleUpdateForm, RedirectAttributes redirectAttributes){
         HttpSession session = request.getSession(false);
         //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
         if (session == null) {
@@ -157,7 +157,7 @@ public class ArticleController {
             return "redirect:/articles/"+id;
         }
         try {
-            Article article = articleService.getUpdateArticle(articleUpdateDto, loginUser);
+            Article article = articleService.getUpdateArticle(articleUpdateForm, loginUser);
             return "redirect:/articles/" + article.getId();
 
         }catch (ErrorMessageException e){
@@ -192,5 +192,39 @@ public class ArticleController {
         }
 
     }
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String type) {
+        List<Article> articleList = articleService.searchArticles(keyword,type);
+        model.addAttribute("pageTitle","search");
+        model.addAttribute("isTitle", "title".equals(type));
+        model.addAttribute("isContent", "content".equals(type));
+        model.addAttribute("articleList", articleList);
+        model.addAttribute("keyword", keyword != null ? keyword : "검색어를 입력"); // 검색창에 검색어 유지용
+
+        return "articles/index";
+    }
+    /*
+    private boolean isNotLoggedIn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
+            return true;
+        }
+        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
+            return true;
+        }
+        return false;
+    }
+    private UserEntity getLoginUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        return (UserEntity) session.getAttribute("user");
+    }
+    */
+
 
 }

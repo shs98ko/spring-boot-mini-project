@@ -14,10 +14,10 @@
 
         <form action="/articles/search" method="get" class="d-flex">
             <select name="type" class="form-select me-2" style="width: 100px;">
-                <option value="title">제목</option>
-                <option value="content">내용</option>
+                <option value="title" {{#isTitle}}selected{{/isTitle}}>제목</option>
+                <option value="content" {{#isContent}}selected{{/isContent}}>내용</option>
             </select>
-            <input type="text" name="keyword" class="form-control me-2" placeholder="검색어 입력">
+            <input type="text" name="keyword" class="form-control me-2" placeholder="검색어 입력"  value="{{keyword}}">
             <button type="submit" class="btn btn-outline-dark" style="white-space: nowrap;">검색</button>
         </form>
     </div>
