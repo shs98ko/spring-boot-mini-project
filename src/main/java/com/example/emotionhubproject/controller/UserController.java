@@ -2,6 +2,7 @@ package com.example.emotionhubproject.controller;
 
 import com.example.emotionhubproject.dto.JoinForm;
 import com.example.emotionhubproject.dto.LoginForm;
+import com.example.emotionhubproject.dto.UserUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
@@ -102,12 +103,40 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}/edit")
-    public String getEdit(){
-        return"/users/pofile";
+    public String getEdit(@PathVariable Long id, Model model){
+        UserEntity updatedUser = userService.getUserByUserId(id);
+        model.addAttribute("pageTitle", "Edit");
+        model.addAttribute("user", updatedUser);
+        return"users/edit-profile";
     }
     @PostMapping("/users/{id}/edit")
-    public String postEdit(){
-        return"redierct:/users/profile";
+    public String postEdit(@PathVariable Long id, Model model, UserUpdateForm userUpdateForm,
+                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            if (session == null){
+                redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
+                return "redirect:/";
+            }
+            UserEntity loginUser = (UserEntity) session.getAttribute("user");
+            if(loginUser == null){
+                redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
+                return "redirect:/";
+            }
+            if (!loginUser.getId().equals(id)){
+                redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다");
+                return "redirect:/";
+            }
+
+            UserEntity user = userService.getUserByUserId(id);
+            UserEntity updatedUser = userService.saveUpdateUser(userUpdateForm, user);
+            model.addAttribute("pageTitle", "Edit");
+            return"redirect:/users/"+ updatedUser.getId();
+        } catch (ErrorMessageException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
+            return "redirect:/";
+        }
+
     }
 
 

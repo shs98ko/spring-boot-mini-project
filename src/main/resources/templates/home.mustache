@@ -1,6 +1,8 @@
 {{>layouts/header}}
 <div class="container mt-5">
-
+    {{#errorMessage}}
+        <div class="alert alert-danger">{{errorMessage}}</div>
+    {{/errorMessage}}
 
 
     <div class="card p-4 mb-4">

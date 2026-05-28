@@ -1,5 +1,20 @@
-{{>..layouts/header}}
+{{>layouts/header}}
+<form method="POST">
+    <label for="name" class="sr-only">Name</label>
+    {{#user}}
+    <input placeholder="Name" name="name" type="text" required value="{{name}}">
+    <br>
+    <label for="username" class="sr-only">ID</label>
+    <input placeholder="Username" name="username" type="text" required value="{{username}}">
+    <br>
+    <label for="email" class="sr-only">Email</label>
+    <input placeholder="Email" name="email" type="email" required value="{{email}}">
+    {{/user}}
+    <br>
+    <input type="submit" value="저장하기">
+</form>
 
-
-
-{{>..layouts/footer}}
+<div>
+    <a href="/change-password" >비밀번호 변경하기 &rarr;</a>
+</div>
+{{>layouts/footer}}

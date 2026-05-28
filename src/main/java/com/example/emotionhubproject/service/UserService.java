@@ -2,6 +2,7 @@ package com.example.emotionhubproject.service;
 
 import com.example.emotionhubproject.dto.JoinForm;
 import com.example.emotionhubproject.dto.LoginForm;
+import com.example.emotionhubproject.dto.UserUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
@@ -67,4 +68,8 @@ public class UserService {
         return  articleRepository.findByUserId(id);
     }
 
+    public UserEntity saveUpdateUser(UserUpdateForm userUpdateForm, UserEntity user){
+        user.updateUser(userUpdateForm);
+        return userRepository.save(user);
+    }
 }

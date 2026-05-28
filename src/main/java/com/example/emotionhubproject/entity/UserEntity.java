@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.entity;
 
+import com.example.emotionhubproject.dto.UserUpdateForm;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,4 +32,16 @@ public class UserEntity {
     }
     public void logInfo(){
         log.info("User=> id: {}, name: {},username:{}, email:{}, password:{}",id, name,username, email, password);}
+
+    public void updateUser(UserUpdateForm dto){
+        if(dto.getName() != null){
+            this.name = dto.getName();
+        }
+        if(dto.getEmail() != null){
+            this.email = dto.getEmail();
+        }
+        if(dto.getUsername() != null){
+            this.username = dto.getUsername();
+        }
+    }
 }
