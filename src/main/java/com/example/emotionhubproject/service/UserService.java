@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.service;
 
+import com.example.emotionhubproject.dto.ChangePasswordForm;
 import com.example.emotionhubproject.dto.JoinForm;
 import com.example.emotionhubproject.dto.LoginForm;
 import com.example.emotionhubproject.dto.UserUpdateForm;
@@ -68,8 +69,15 @@ public class UserService {
         return  articleRepository.findByUserId(id);
     }
 
-    public UserEntity saveUpdateUser(UserUpdateForm userUpdateForm, UserEntity user){
+    public void saveUpdateUser(UserUpdateForm userUpdateForm, Long id){
+        UserEntity user = getUserByUserId(id);
         user.updateUser(userUpdateForm);
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public void changePassword(ChangePasswordForm changePasswordForm, Long id){
+        UserEntity user = getUserByUserId(id);
+        user.changePassword(changePasswordForm);
+        userRepository.save(user);
     }
 }

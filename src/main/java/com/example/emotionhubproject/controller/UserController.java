@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.controller;
 
+import com.example.emotionhubproject.dto.ChangePasswordForm;
 import com.example.emotionhubproject.dto.JoinForm;
 import com.example.emotionhubproject.dto.LoginForm;
 import com.example.emotionhubproject.dto.UserUpdateForm;
@@ -113,25 +114,12 @@ public class UserController {
     public String postEdit(@PathVariable Long id, Model model, UserUpdateForm userUpdateForm,
                            RedirectAttributes redirectAttributes, HttpServletRequest request) {
         try {
-            HttpSession session = request.getSession(false);
-            if (session == null){
-                redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
+            if(isUnauthorized(request, id, redirectAttributes)){
                 return "redirect:/";
             }
-            UserEntity loginUser = (UserEntity) session.getAttribute("user");
-            if(loginUser == null){
-                redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
-                return "redirect:/";
-            }
-            if (!loginUser.getId().equals(id)){
-                redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다");
-                return "redirect:/";
-            }
-
-            UserEntity user = userService.getUserByUserId(id);
-            UserEntity updatedUser = userService.saveUpdateUser(userUpdateForm, user);
+            userService.saveUpdateUser(userUpdateForm, id);
             model.addAttribute("pageTitle", "Edit");
-            return"redirect:/users/"+ updatedUser.getId();
+            return"redirect:/users/"+ id;
         } catch (ErrorMessageException e) {
             redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
             return "redirect:/";
@@ -139,7 +127,48 @@ public class UserController {
 
     }
 
+    @GetMapping("/users/{id}/changepassword")
+    public String getChangePassword(Model model){
+        model.addAttribute("pageTitle","비밀번호 변경");
+        return "users/change-password";
+    }
 
+
+    @PostMapping("/users/{id}/changepassword")
+    public String postChangePassword(@PathVariable Long id,Model model,
+                                     ChangePasswordForm changePasswordForm, HttpServletRequest request,
+                                     RedirectAttributes redirectAttributes){
+        try {
+            if(isUnauthorized(request, id, redirectAttributes)){
+                return "redirect:/";
+            }
+            userService.changePassword(changePasswordForm,id);
+            model.addAttribute("pageTitle", "Edit");
+            return"redirect:/users/"+ id;
+
+        } catch (ErrorMessageException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
+            return "redirect:/";
+        }
+    }
+
+    private boolean isUnauthorized(HttpServletRequest request, Long id, RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
+            return true;
+        }
+        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "로그인이 필요합니다");
+            return true;
+        }
+        if (!loginUser.getId().equals(id)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다");
+            return true;
+        }
+        return false;
+    }
 
 
 }
