@@ -68,7 +68,7 @@ public class UserController {
             UserEntity user = userService.login(loginForm);
             HttpSession session = request.getSession();
             session.setAttribute("loggedIn", true);
-            session.setAttribute("user", user);
+            session.setAttribute("user", user); //DTO 고려
             return "redirect:/";
 
         }catch(ErrorMessageException e){
@@ -86,8 +86,19 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public String see(){
-        return"/users/poflie";
+    public String seeUser(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
+        try {
+            UserEntity user = userService.getUserByUserId(id);
+            List<Article> articles = userService.getArticlesByUserId(user.getId());
+            model.addAttribute("pageTitle", user.getUsername() + "상세페이지");
+            model.addAttribute("user", user);
+            model.addAttribute("articles", articles);
+            return"users/profile";
+        }catch(ErrorMessageException e){
+            redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
+            return "redirect:/";
+        }
+
     }
 
     @GetMapping("/users/{id}/edit")
