@@ -7,6 +7,9 @@
         <div class="col-md-8">
 
             <div class="card shadow border-0">
+                {{#errorMessage}}
+                    <div class="alert alert-danger">{{errorMessage}}</div>
+                {{/errorMessage}}
 
                 <div class="card-body p-5">
 
@@ -55,7 +58,7 @@
                             </button>
 
                             <a
-                                    href="/"
+                                    href="/articles"
                                     class="btn btn-outline-secondary flex-fill">
 
                                 취소

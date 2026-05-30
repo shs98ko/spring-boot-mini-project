@@ -33,6 +33,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public Article getUpdateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
+
+        if (articleUpdateForm.getTitle() == null || articleUpdateForm.getTitle().trim().isEmpty()) {
+            throw new ErrorMessageException("제목을 입력해주세요.");
+        }
+        if (articleUpdateForm.getContent() == null || articleUpdateForm.getContent().trim().isEmpty()) {
+            throw new ErrorMessageException("내용을 입력해주세요.");
+        }
         Long updateFormId= articleUpdateForm.getId();
 
         //게시글 조회
@@ -49,6 +56,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public void postArticle(ArticleForm articleForm, UserEntity user){
+        if (articleForm.getTitle() == null || articleForm.getTitle().trim().isEmpty()) {
+            throw new ErrorMessageException("제목을 입력해주세요.");
+        }
+        if (articleForm.getContent() == null || articleForm.getContent().trim().isEmpty()) {
+            throw new ErrorMessageException("내용을 입력해주세요.");
+        }
         Article article = new Article(articleForm.getTitle(),articleForm.getContent(),user.getId(),user.getUsername());
         articleRepository.save(article);
     }

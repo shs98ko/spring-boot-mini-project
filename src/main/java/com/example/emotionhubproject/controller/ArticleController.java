@@ -63,7 +63,7 @@ public class ArticleController {
     }
     //글 DB저장
     @PostMapping("/post")
-    public String postNewArticle(ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String postNewArticle(Model model, ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         HttpSession session =request.getSession(false);
         //세션 먼저 체크 (로그인 안한경우)
@@ -78,8 +78,16 @@ public class ArticleController {
             return "redirect:/articles";
         }
 
-        articleServiceImpl.postArticle(articleForm, loginUser);
-        return "redirect:/articles";
+        try {
+            articleServiceImpl.postArticle(articleForm, loginUser);
+            model.addAttribute("pageTitle", "Community");
+            return "redirect:/articles";
+
+        } catch (ErrorMessageException e) {
+            model.addAttribute("pageTitle", "글쓰기");
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/articles/post";
+        }
     }
 
     //게시물 하나 조회하기
@@ -160,7 +168,7 @@ public class ArticleController {
             return "redirect:/articles/" + article.getId();
 
         }catch (ErrorMessageException e){
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/articles/"+id;
         }
     }
