@@ -5,8 +5,8 @@ import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
-import com.example.emotionhubproject.service.ArticleService;
-import com.example.emotionhubproject.service.CommentService;
+import com.example.emotionhubproject.service.ArticleServiceImpl;
+import com.example.emotionhubproject.service.CommentServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
@@ -26,13 +25,13 @@ import java.util.Map;
 @RequestMapping("/articles")
 public class ArticleController {
 
-    private final ArticleService articleService;
-    private final CommentService commentService;
+    private final ArticleServiceImpl articleServiceImpl;
+    private final CommentServiceImpl commentServiceImpl;
 
     // 목록
     @GetMapping({""})
     public String index(Model model) {
-        List<Article> articleList = articleService.getAllArticles();
+        List<Article> articleList = articleServiceImpl.getAllArticles();
 
         model.addAttribute("pageTitle", "Articles");
         model.addAttribute("articleList", articleList);
@@ -79,7 +78,7 @@ public class ArticleController {
             return "redirect:/articles";
         }
 
-        articleService.postArticle(articleForm, loginUser);
+        articleServiceImpl.postArticle(articleForm, loginUser);
         return "redirect:/articles";
     }
 
@@ -92,14 +91,14 @@ public class ArticleController {
             boolean loggedIn = loginUser != null; // false
 
             //article
-            Article article = articleService.getArticle(id);
+            Article article = articleServiceImpl.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
-            boolean isOwner = loginUser != null && articleService.isOwner(article, loginUser.getId());
+            boolean isOwner = loginUser != null && articleServiceImpl.isOwner(article, loginUser.getId());
             model.addAttribute("isOwner", isOwner);
 
             //comment
-            List<Map<String,Object>> comments = commentService.getComments(id, loginUser);
+            List<Map<String,Object>> comments = commentServiceImpl.getComments(id, loginUser);
             model.addAttribute("comments", comments);
             model.addAttribute("loggedIn", loggedIn);
 
@@ -128,9 +127,9 @@ public class ArticleController {
         }
 
         try {
-            Article article = articleService.getArticle(id);
+            Article article = articleServiceImpl.getArticle(id);
             //본인게시글 접근 제한
-            if (!articleService.isOwner(article, loginUser.getId())) {
+            if (!articleServiceImpl.isOwner(article, loginUser.getId())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
                 return "redirect:/articles/"+id;
             }
@@ -157,7 +156,7 @@ public class ArticleController {
             return "redirect:/articles/"+id;
         }
         try {
-            Article article = articleService.getUpdateArticle(articleUpdateForm, loginUser);
+            Article article = articleServiceImpl.getUpdateArticle(articleUpdateForm, loginUser);
             return "redirect:/articles/" + article.getId();
 
         }catch (ErrorMessageException e){
@@ -183,7 +182,7 @@ public class ArticleController {
         }
 
         try {
-            articleService.deleteArticle(id, loginUser.getId());
+            articleServiceImpl.deleteArticle(id, loginUser.getId());
             redirectAttributes.addFlashAttribute("successMessage", "삭제되었습니다.");
             return "redirect:/articles";
         }catch (ErrorMessageException e){
@@ -195,7 +194,7 @@ public class ArticleController {
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String type) {
-        List<Article> articleList = articleService.searchArticles(keyword,type);
+        List<Article> articleList = articleServiceImpl.searchArticles(keyword,type);
         model.addAttribute("pageTitle","search");
         model.addAttribute("isTitle", "title".equals(type));
         model.addAttribute("isContent", "content".equals(type));
