@@ -46,9 +46,13 @@ public class UserEntity {
             this.username = dto.getUsername();
         }
     }
+
     public  void changePassword(ChangePasswordForm dto){
         if(!this.password.equals(dto.getOldPassword())){
             throw new ErrorMessageException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        if(this.password.equals(dto.getNewPassword())){
+            throw new ErrorMessageException("새로운 비밀번호를 입력해주세요.");
         }
         if(!dto.getNewPassword().equals(dto.getNewPasswordConfirmation())){
             throw new ErrorMessageException("새 비밀번호 확인이 일치하지 않습니다.");
