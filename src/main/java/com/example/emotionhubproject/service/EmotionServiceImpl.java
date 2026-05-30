@@ -1,6 +1,7 @@
 package com.example.emotionhubproject.service;
 
 import com.example.emotionhubproject.entity.EmotionDiary;
+import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.repository.EmotionDiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,8 @@ public class EmotionServiceImpl implements EmotionService {
             case "우울": return -1;
             case "화남": return -2;
             case "분노": return -3;
-            default: return 0;
+            default: throw new ErrorMessageException(
+                    "행복, 기쁨, 신남, 평범, 우울, 화남, 분노 중 하나만 입력 가능합니다.");
         }
     }
 }

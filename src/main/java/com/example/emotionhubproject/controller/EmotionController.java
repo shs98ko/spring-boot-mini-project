@@ -1,6 +1,7 @@
 package com.example.emotionhubproject.controller;
 
 import com.example.emotionhubproject.entity.EmotionDiary;
+import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.service.EmotionAnalysisServiceImpl;
 import com.example.emotionhubproject.service.EmotionServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -40,9 +42,14 @@ public class EmotionController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute EmotionDiary diary) {
-        emotionServiceImpl.save(diary);
-        emotionServiceImpl.deleteOldest();
-        return "redirect:/";
+    public String save(@ModelAttribute EmotionDiary diary, RedirectAttributes redirectAttributes) {
+        try{
+            emotionServiceImpl.save(diary);
+            emotionServiceImpl.deleteOldest();
+            return "redirect:/";}
+        catch (ErrorMessageException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/";
+        }
     }
 }
