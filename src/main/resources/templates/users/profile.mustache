@@ -1,32 +1,54 @@
 {{>layouts/header}}
-{{#user}}
-<h1>{{username}}님의 마이페이지</h1>
-<br>
-<h4>이름: {{name}}</h4>
-<br>
-<h4>ID: {{username}}</h4>
-<br>
-<h4>이메일: {{email}}</h4>
-<br>
-<a href="/users/{{id}}/edit" class="btn btn-primary btn-sm"> 내 정보 수정하기</a>
-{{/user}}
 
+<div class="container mt-5">
 
-<h2>내 게시글</h2>
-{{#articles}}
-    <div>
-        <a href="/articles/{{id}}">
-            {{title}}
-        </a>
-        <small class="text-muted">{{FormattedCreatedAt}}</small>
-    </div>
-{{/articles}}
+    <div class="row">
 
-<!--<h2>내 감정 기록</h2>-->
-<!--{{#emotions}}-->
-<!--    <div>-->
-<!--        {{emotion}}-->
-<!--    </div>-->
-<!--{{/emotions}}-->
+        <div class="col-lg-8 mx-auto">
 
-{{>layouts/footer}}
+            <h2 class="fw-bold mb-4">{{user.name}}님의 마이페이지</h2>
+
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold border-bottom pb-3 mb-4">👤 회원 정보</h4>
+
+                    <div class="mb-4">
+                        <p class="fs-5 mb-2"><strong>이름 :</strong> {{user.name}}</p>
+                        <p class="fs-5 mb-2"><strong>아이디 :</strong> {{user.username}}</p>
+                        <p class="fs-5 mb-2"><strong>이메일 :</strong> {{user.email}}</p>
+                    </div>
+
+                    <div class="text-end">
+                        <a href="/users/{{user.id}}/edit" class="btn btn-primary px-4 fw-bold">
+                            정보 수정
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold border-bottom pb-3 mb-4">📝 내 게시글</h4>
+
+                    <div class="list-group list-group-flush">
+                        {{#articles}}
+                            <a href="/articles/{{id}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3">
+                                <span class="fw-bold text-dark">{{title}}</span>
+                                <small class="text-muted">{{FormattedCreatedAt}}</small>
+                            </a>
+                        {{/articles}}
+
+                        {{^articles}}
+                            <div class="text-center py-5 text-muted">
+                                아직 작성한 게시글이 없습니다.
+                            </div>
+                        {{/articles}}
+                    </div>
+
+                </div>
+            </div>
+
+        </div> </div> </div> {{>layouts/footer}}
