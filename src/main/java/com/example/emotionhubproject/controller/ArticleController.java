@@ -3,6 +3,7 @@ package com.example.emotionhubproject.controller;
 import com.example.emotionhubproject.dto.ArticleForm;
 import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import com.example.emotionhubproject.entity.Article;
+import com.example.emotionhubproject.entity.CommentResponse;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.service.ArticleServiceImpl;
@@ -106,7 +107,7 @@ public class ArticleController {
             model.addAttribute("isOwner", isOwner);
 
             //comment
-            List<Map<String,Object>> comments = commentServiceImpl.getComments(id, loginUser);
+            List<CommentResponse> comments = commentServiceImpl.getComments(id, loginUser);
             model.addAttribute("comments", comments);
             model.addAttribute("loggedIn", loggedIn);
 

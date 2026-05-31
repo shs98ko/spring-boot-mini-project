@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.service;
 
+import com.example.emotionhubproject.entity.CommentResponse;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +17,15 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
-    public List<Map<String, Object>> getComments(Long articleId, UserEntity loginUser) {
+    public List<CommentResponse> getComments(Long articleId, UserEntity loginUser) {
         return commentRepository.findByArticleId(articleId).stream()
-                .map(comment -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("id", comment.getId());
-                    map.put("text", comment.getText());
-                    map.put("canDelete", loginUser != null && loginUser.getId().equals(comment.getUserId()));
-                    return map;
-                })
+                .map(comment -> new CommentResponse(
+                        comment.getId(),
+                        comment.getText(),
+                        loginUser != null && loginUser.getId().equals(comment.getUserId())
+                ))
                 .collect(Collectors.toList());
     }
+
+
 }
