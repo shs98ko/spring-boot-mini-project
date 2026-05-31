@@ -42,7 +42,7 @@ public class ArticleController {
     }
     //글쓰기
     @GetMapping("/post")
-    public String getNewArticle(Model model, HttpServletRequest request,RedirectAttributes redirectAttributes) {
+    public String newArticle(Model model, HttpServletRequest request,RedirectAttributes redirectAttributes) {
 
         HttpSession session =request.getSession(false);
         //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
@@ -63,7 +63,7 @@ public class ArticleController {
     }
     //글 DB저장
     @PostMapping("/post")
-    public String postNewArticle(Model model, ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    public String create(Model model, ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
         HttpSession session =request.getSession(false);
         //세션 먼저 체크 (로그인 안한경우)
@@ -92,7 +92,7 @@ public class ArticleController {
 
     //게시물 하나 조회하기
     @GetMapping("/{id}")
-    public String showArticle(HttpServletRequest request, @PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
+    public String show(HttpServletRequest request, @PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
         try {
             HttpSession session = request.getSession(false); // 세션 없으면 null 반환 (새로 만들지 않음)
             UserEntity loginUser = session != null ? (UserEntity) session.getAttribute("user") : null; // 세션 null이면 loginUser도 null
@@ -119,7 +119,7 @@ public class ArticleController {
 
     //게시물 수정
     @GetMapping("/{id}/edit")
-    public String getEdit(HttpServletRequest request, @PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
+    public String editForm(HttpServletRequest request, @PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
 
         HttpSession session = request.getSession(false);
         //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
@@ -150,7 +150,7 @@ public class ArticleController {
         }
     }
     @PostMapping("/{id}/edit")
-    public String postEdit(@PathVariable Long id, HttpServletRequest request, ArticleUpdateForm articleUpdateForm, RedirectAttributes redirectAttributes){
+    public String update(@PathVariable Long id, HttpServletRequest request, ArticleUpdateForm articleUpdateForm, RedirectAttributes redirectAttributes){
         HttpSession session = request.getSession(false);
         //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
         if (session == null) {
