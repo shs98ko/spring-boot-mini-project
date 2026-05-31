@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
 
     //게시물 전제 조회
     public List<Article> getAllArticles() {

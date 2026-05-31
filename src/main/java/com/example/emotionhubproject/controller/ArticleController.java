@@ -6,8 +6,8 @@ import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.CommentResponse;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
-import com.example.emotionhubproject.service.ArticleServiceImpl;
-import com.example.emotionhubproject.service.CommentServiceImpl;
+import com.example.emotionhubproject.service.ArticleService;
+import com.example.emotionhubproject.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ import java.util.Map;
 @RequestMapping("/articles")
 public class ArticleController {
 
-    private final ArticleServiceImpl articleServiceImpl;
-    private final CommentServiceImpl commentServiceImpl;
+    private final ArticleService articleService;
+    private final CommentService commentService;
 
     // 목록
     @GetMapping({""})
     public String index(Model model) {
-        List<Article> articleList = articleServiceImpl.getAllArticles();
+        List<Article> articleList = articleService.getAllArticles();
 
         model.addAttribute("pageTitle", "Articles");
         model.addAttribute("articleList", articleList);
@@ -80,7 +80,7 @@ public class ArticleController {
         }
 
         try {
-            articleServiceImpl.createArticle(articleForm, loginUser);
+            articleService.createArticle(articleForm, loginUser);
             model.addAttribute("pageTitle", "Community");
             return "redirect:/articles";
 
@@ -100,14 +100,14 @@ public class ArticleController {
             boolean loggedIn = loginUser != null; // false
 
             //article
-            Article article = articleServiceImpl.getArticle(id);
+            Article article = articleService.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
             boolean isOwner = loginUser != null && article.isOwner(loginUser.getId());
             model.addAttribute("isOwner", isOwner);
 
             //comment
-            List<CommentResponse> comments = commentServiceImpl.getComments(id, loginUser);
+            List<CommentResponse> comments = commentService.getComments(id, loginUser);
             model.addAttribute("comments", comments);
             model.addAttribute("loggedIn", loggedIn);
 
@@ -136,7 +136,7 @@ public class ArticleController {
         }
 
         try {
-            Article article = articleServiceImpl.getArticle(id);
+            Article article = articleService.getArticle(id);
             //본인게시글 접근 제한
             if (!article.isOwner(loginUser.getId())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
@@ -165,7 +165,7 @@ public class ArticleController {
             return "redirect:/articles/"+id;
         }
         try {
-            Article article = articleServiceImpl.updateArticle(articleUpdateForm, loginUser);
+            Article article = articleService.updateArticle(articleUpdateForm, loginUser);
             return "redirect:/articles/" + article.getId();
 
         }catch (ErrorMessageException e){
@@ -191,7 +191,7 @@ public class ArticleController {
         }
 
         try {
-            articleServiceImpl.deleteArticle(id, loginUser.getId());
+            articleService.deleteArticle(id, loginUser.getId());
             redirectAttributes.addFlashAttribute("successMessage", "삭제되었습니다.");
             return "redirect:/articles";
         }catch (ErrorMessageException e){
@@ -203,7 +203,7 @@ public class ArticleController {
 
     @GetMapping("/search")
     public String search(Model model, @RequestParam(required = false) String keyword, @RequestParam(required = false) String type) {
-        List<Article> articleList = articleServiceImpl.searchArticles(keyword,type);
+        List<Article> articleList = articleService.searchArticles(keyword,type);
         model.addAttribute("pageTitle","search");
         model.addAttribute("isTitle", "title".equals(type));
         model.addAttribute("isContent", "content".equals(type));

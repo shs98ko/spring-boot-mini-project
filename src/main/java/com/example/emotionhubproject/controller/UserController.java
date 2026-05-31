@@ -7,6 +7,7 @@ import com.example.emotionhubproject.dto.UserUpdateForm;
 import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
+import com.example.emotionhubproject.service.UserService;
 import com.example.emotionhubproject.service.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,7 +25,7 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     @GetMapping("/join")
     public String getJoin(HttpServletRequest request ,Model model){
@@ -43,7 +44,7 @@ public class UserController {
     @PostMapping("/join")
     public String postJoin(JoinForm joinForm, Model model) {
         try{
-            userServiceImpl.join(joinForm);
+            userService.join(joinForm);
             return "redirect:/login";
         } catch (ErrorMessageException e) {
             model.addAttribute("pageTitle","Join");
@@ -67,7 +68,7 @@ public class UserController {
     @PostMapping("/login")
     public String postLogin(HttpServletRequest request, LoginForm loginForm, Model model){
         try{
-            UserEntity user = userServiceImpl.login(loginForm);
+            UserEntity user = userService.login(loginForm);
             HttpSession session = request.getSession();
             session.setAttribute("loggedIn", true);
             session.setAttribute("user", user); //DTO 고려
@@ -90,8 +91,8 @@ public class UserController {
     @GetMapping("/users/{id}")
     public String seeUser(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
         try {
-            UserEntity user = userServiceImpl.getUserByUserId(id);
-            List<Article> articles = userServiceImpl.getArticlesByUserId(user.getId());
+            UserEntity user = userService.getUserByUserId(id);
+            List<Article> articles = userService.getArticlesByUserId(user.getId());
             model.addAttribute("pageTitle", user.getUsername() + "상세페이지");
             model.addAttribute("user", user);
             model.addAttribute("articles", articles);
@@ -105,7 +106,7 @@ public class UserController {
 
     @GetMapping("/users/{id}/edit")
     public String getEdit(@PathVariable Long id, Model model){
-        UserEntity updatedUser = userServiceImpl.getUserByUserId(id);
+        UserEntity updatedUser = userService.getUserByUserId(id);
         model.addAttribute("pageTitle", "Edit");
         model.addAttribute("user", updatedUser);
         return"users/edit-profile";
@@ -117,9 +118,10 @@ public class UserController {
             if(isUnauthorized(request, id, redirectAttributes)){
                 return "redirect:/";
             }
-            userServiceImpl.saveUpdateUser(userUpdateForm, id);
+            userService.saveUpdateUser(userUpdateForm, id);
             model.addAttribute("pageTitle", "Edit");
             return"redirect:/users/"+ id;
+
         } catch (ErrorMessageException e) {
             redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
             return "redirect:/";
@@ -142,7 +144,7 @@ public class UserController {
             if(isUnauthorized(request, id, redirectAttributes)){
                 return "redirect:/";
             }
-            userServiceImpl.changePassword(changePasswordForm,id);
+            userService.changePassword(changePasswordForm,id);
             model.addAttribute("pageTitle", "Edit");
             return"redirect:/users/"+ id;
 
