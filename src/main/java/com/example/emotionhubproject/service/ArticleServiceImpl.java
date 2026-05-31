@@ -24,26 +24,22 @@ public class ArticleServiceImpl implements ArticleService {
 
     //게시물 조회
     public Article getArticle(Long id){
-        return articleRepository.findById(id).orElseThrow(() -> new ErrorMessageException("Article not found."));
+        return articleRepository.findById(id).orElseThrow(() -> new ErrorMessageException("해당 게시글을 찾을 수 없습니다."));
     }
 
     public Article updateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
-
         if (articleUpdateForm.getTitle() == null || articleUpdateForm.getTitle().trim().isEmpty()) {
             throw new ErrorMessageException("제목을 입력해주세요.");
         }
         if (articleUpdateForm.getContent() == null || articleUpdateForm.getContent().trim().isEmpty()) {
             throw new ErrorMessageException("내용을 입력해주세요.");
         }
-        Long updateFormId= articleUpdateForm.getId();
 
-        //게시글 조회
-        Article article = articleRepository.findById(updateFormId)
-                .orElseThrow(()-> new ErrorMessageException("Article not found"));
+        // 재사용 - 예외처리 포함
+        Article article = getArticle(articleUpdateForm.getId());
 
-        //본인확인
-        if(!article.getUserId().equals(user.getId())){
-            throw new ErrorMessageException("Not authorized");
+        if(!article.isOwner(user.getId())){
+            throw new ErrorMessageException("권한이 없습니다.");
         }
 
         article.patch(articleUpdateForm);
@@ -62,12 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     public void deleteArticle(Long id, Long loginUserId) {
-        //게시물 조회
-        Article article = articleRepository.findById(id).orElseThrow(
-                () -> new ErrorMessageException("Article not found."));
-        //권한 제한
-        if(!article.getUserId().equals(loginUserId)){
-            throw new ErrorMessageException("Not authorized");
+        // 재사용 - 예외처리 포함
+        Article article = getArticle(id);
+
+        if(!article.isOwner(loginUserId)){
+            throw new ErrorMessageException("권한이 없습니다.");
         }
         articleRepository.delete(article);
     }
