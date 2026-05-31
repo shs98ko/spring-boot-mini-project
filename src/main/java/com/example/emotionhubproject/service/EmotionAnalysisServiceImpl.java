@@ -97,4 +97,17 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
 
         return topEmotion;
     }
+    /*
+    public String topEmotion(List<EmotionDiary> diaryList) {
+        if (diaryList.isEmpty()) return "아직 기록된 감정이 없어요.";
+
+        Map<String, Long> countMap = diaryList.stream()
+                .collect(Collectors.groupingBy(EmotionDiary::getEmotion, Collectors.counting()));
+
+        return countMap.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse("기록 없음");
+     }
+    */
 }
