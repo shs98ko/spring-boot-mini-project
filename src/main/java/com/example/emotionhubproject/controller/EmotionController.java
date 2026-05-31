@@ -4,7 +4,7 @@ import com.example.emotionhubproject.dto.EmotionDiaryForm;
 import com.example.emotionhubproject.entity.EmotionDiary;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.service.EmotionAnalysisService;
-import com.example.emotionhubproject.service.EmotionServiceImpl;
+import com.example.emotionhubproject.service.EmotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmotionController {
 
-    private final EmotionServiceImpl emotionService;
+    private final EmotionService emotionService;
     private final EmotionAnalysisService emotionAnalysisService;
 
     @GetMapping("/")

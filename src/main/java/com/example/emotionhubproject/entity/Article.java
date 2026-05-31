@@ -13,10 +13,8 @@ import java.time.format.DateTimeFormatter;
 
 @Entity
 @NoArgsConstructor
-@Slf4j
 @Getter
 @ToString
-@Table(name = "article")
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,10 +41,6 @@ public class Article {
         this.content = content;
         this.userId = userId;
         this.username =username;
-    }
-
-    public void logInfo(){
-        log.info("id: {}, title: [], content: {}",id , title, content);
     }
 
     public String getFormattedCreatedAt() {

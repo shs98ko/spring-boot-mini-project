@@ -9,10 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Slf4j
 public class LoginForm {
     private String   username, password;
-    public void logInfo() {
-        log.info("Login Form =>  username:{}, password:{}", username, password);
-    }
 }

@@ -1,10 +1,12 @@
 package com.example.emotionhubproject.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@NoArgsConstructor
+@Setter
 @AllArgsConstructor
+@ToString
 public class CommentResponse {
     private Long id;
     private String text;

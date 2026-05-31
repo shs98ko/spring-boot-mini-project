@@ -4,16 +4,15 @@ import com.example.emotionhubproject.dto.EmotionDiaryForm;
 import com.example.emotionhubproject.entity.EmotionDiary;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.repository.EmotionDiaryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@RequiredArgsConstructor
 @Service
 public class EmotionServiceImpl implements EmotionService {
 
-    @Autowired
-    private EmotionDiaryRepository repository;
+    private final EmotionDiaryRepository repository;
 
     // 전체 조회
     public List<EmotionDiary> getDiaries() {

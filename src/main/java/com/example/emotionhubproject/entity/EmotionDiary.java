@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor @NoArgsConstructor @ToString
 public class EmotionDiary {
 

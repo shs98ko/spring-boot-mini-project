@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
         //DTO-> Entity로 변환 -> Repository를 통해 DB로 Entity를 저장
         UserEntity user   = new UserEntity(joinForm.getName(),joinForm.getUsername(),joinForm.getEmail(), joinForm.getPassword());
         UserEntity save = userRepository.save(user);
-        save.logInfo();
     }
 
     public UserEntity login(LoginForm loginForm) {
@@ -57,7 +56,6 @@ public class UserServiceImpl implements UserService {
         if(!user.getPassword().equals(loginForm.getPassword())){
             throw new ErrorMessageException("Wrong password.");
         }
-        user.logInfo();
         return user;
     }
 

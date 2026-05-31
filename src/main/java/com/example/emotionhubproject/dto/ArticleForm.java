@@ -10,13 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Slf4j
 public class ArticleForm {
     private String title;
     private String content;
 
 
-    public void logInfo(){
-        log.info("Article Form => title: {}, content: {}",title,content);
-    }
 }
