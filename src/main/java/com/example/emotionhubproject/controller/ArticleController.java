@@ -79,7 +79,7 @@ public class ArticleController {
         }
 
         try {
-            articleServiceImpl.postArticle(articleForm, loginUser);
+            articleServiceImpl.createArticle(articleForm, loginUser);
             model.addAttribute("pageTitle", "Community");
             return "redirect:/articles";
 
@@ -164,7 +164,7 @@ public class ArticleController {
             return "redirect:/articles/"+id;
         }
         try {
-            Article article = articleServiceImpl.getUpdateArticle(articleUpdateForm, loginUser);
+            Article article = articleServiceImpl.updateArticle(articleUpdateForm, loginUser);
             return "redirect:/articles/" + article.getId();
 
         }catch (ErrorMessageException e){

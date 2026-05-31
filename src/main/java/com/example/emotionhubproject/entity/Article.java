@@ -53,6 +53,7 @@ public class Article {
     public String getFormattedCreatedAt() {
         return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
     public void patch(ArticleUpdateForm dto){
         if(dto.getTitle() != null){
             this.title = dto.getTitle();

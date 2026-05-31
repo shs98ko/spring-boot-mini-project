@@ -32,7 +32,7 @@ public class ArticleServiceImpl implements ArticleService {
         return article.getUserId().equals(userId);
     }
 
-    public Article getUpdateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
+    public Article updateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
 
         if (articleUpdateForm.getTitle() == null || articleUpdateForm.getTitle().trim().isEmpty()) {
             throw new ErrorMessageException("제목을 입력해주세요.");
@@ -55,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
         return articleRepository.save(article);
     }
 
-    public void postArticle(ArticleForm articleForm, UserEntity user){
+    public void createArticle(ArticleForm articleForm, UserEntity user){
         if (articleForm.getTitle() == null || articleForm.getTitle().trim().isEmpty()) {
             throw new ErrorMessageException("제목을 입력해주세요.");
         }

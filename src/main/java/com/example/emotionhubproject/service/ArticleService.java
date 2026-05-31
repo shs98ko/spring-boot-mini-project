@@ -20,10 +20,10 @@ public interface ArticleService {
     boolean isOwner(Article article, Long userId);
 
     // 게시글 수정
-    Article getUpdateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user);
+    Article updateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user);
 
     // 게시글 작성
-    void postArticle(ArticleForm articleForm, UserEntity user);
+    void createArticle(ArticleForm articleForm, UserEntity user);
 
     // 게시글 삭제
     void deleteArticle(Long id, Long loginUserId);
