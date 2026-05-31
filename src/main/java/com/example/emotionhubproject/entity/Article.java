@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
     private String title;

@@ -23,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String name, username, email, password;
+    private Long id;
+    private String name, username, email, password;
 
     public UserEntity(String name, String username, String email, String password) {
         this.name = name;
