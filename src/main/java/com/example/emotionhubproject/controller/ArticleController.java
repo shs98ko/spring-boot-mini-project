@@ -33,7 +33,7 @@ public class ArticleController {
     public String index(Model model) {
         List<Article> articleList = articleService.getAllArticles();
 
-        model.addAttribute("pageTitle", "Articles");
+        model.addAttribute("pageTitle", "Community");
         model.addAttribute("articleList", articleList);
         model.addAttribute("keyword", "");
         model.addAttribute("isTitle", true);
