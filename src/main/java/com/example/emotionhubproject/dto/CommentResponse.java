@@ -1,4 +1,4 @@
-package com.example.emotionhubproject.entity;
+package com.example.emotionhubproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

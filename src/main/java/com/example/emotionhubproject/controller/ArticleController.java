@@ -3,7 +3,7 @@ package com.example.emotionhubproject.controller;
 import com.example.emotionhubproject.dto.ArticleForm;
 import com.example.emotionhubproject.dto.ArticleUpdateForm;
 import com.example.emotionhubproject.entity.Article;
-import com.example.emotionhubproject.entity.CommentResponse;
+import com.example.emotionhubproject.dto.CommentResponse;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.service.ArticleService;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
