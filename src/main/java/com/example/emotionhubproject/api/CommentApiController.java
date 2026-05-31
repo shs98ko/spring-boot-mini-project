@@ -7,6 +7,7 @@ import com.example.emotionhubproject.entity.Comment;
 import com.example.emotionhubproject.entity.UserEntity;
 import com.example.emotionhubproject.repository.ArticleRepository;
 import com.example.emotionhubproject.repository.CommentRepository;
+import com.example.emotionhubproject.service.CommentServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,8 @@ import java.util.Map;
 @RestController
 public class CommentApiController {
 
-    private final ArticleRepository articleRepository;
+    private final CommentServiceImpl commentServiceImpl;
 
-    private final CommentRepository commentRepository;
     @PostMapping("/articles/{id}/comment")
     public ResponseEntity<?> createComment(HttpServletRequest request, @PathVariable Long id, @RequestBody CommentForm commentForm){
         HttpSession session = request.getSession(false);
@@ -38,18 +38,7 @@ public class CommentApiController {
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        Article article = articleRepository.findById(id)
-                .orElse(null);
-
-        if (article == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("errorMessage", "Article not found"));
-        }
-
-        //Comment 생성 및 저장
-        Comment comment = new Comment(loginUser.getId(), article.getId(), commentForm.getText());
-        Comment commentSaved = commentRepository.save(comment);
+        Comment commentSaved = commentServiceImpl.createComment(id, commentForm, loginUser);
 
         //JSON형식으로 변환
         Map<String, Long> response = new HashMap<>();
@@ -69,18 +58,7 @@ public class CommentApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Comment comment = commentRepository.findById(commentId).orElse(null);
-
-        if (comment == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        if(!comment.getUserId().equals(loginUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        commentRepository.delete(comment);
-
+        commentServiceImpl.deleteComment(commentId, loginUser);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
