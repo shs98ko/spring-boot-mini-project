@@ -102,7 +102,7 @@ public class ArticleController {
             Article article = articleServiceImpl.getArticle(id);
             model.addAttribute("pageTitle",article.getTitle());
             model.addAttribute("article", article);
-            boolean isOwner = loginUser != null && articleServiceImpl.isOwner(article, loginUser.getId());
+            boolean isOwner = loginUser != null && article.isOwner(loginUser.getId());
             model.addAttribute("isOwner", isOwner);
 
             //comment
@@ -137,7 +137,7 @@ public class ArticleController {
         try {
             Article article = articleServiceImpl.getArticle(id);
             //본인게시글 접근 제한
-            if (!articleServiceImpl.isOwner(article, loginUser.getId())) {
+            if (!article.isOwner(loginUser.getId())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
                 return "redirect:/articles/"+id;
             }

@@ -27,10 +27,6 @@ public class ArticleServiceImpl implements ArticleService {
     public Article getArticle(Long id){
         return articleRepository.findById(id).orElseThrow(() -> new ErrorMessageException("Article not found."));
     }
-    //본인확인여부
-    public boolean isOwner(Article article,Long userId){
-        return article.getUserId().equals(userId);
-    }
 
     public Article updateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user){
 

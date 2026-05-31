@@ -62,4 +62,9 @@ public class Article {
             this.content = dto.getContent();
         }
     }
+
+    //본인확인여부
+    public boolean isOwner(Long userId){
+        return this.userId.equals(userId);
+    }
 }

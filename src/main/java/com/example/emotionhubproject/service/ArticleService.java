@@ -16,9 +16,6 @@ public interface ArticleService {
     // 단일 게시물 조회
     Article getArticle(Long id);
 
-    // 본인 확인 여부
-    boolean isOwner(Article article, Long userId);
-
     // 게시글 수정
     Article updateArticle(ArticleUpdateForm articleUpdateForm, UserEntity user);
 
