@@ -9,7 +9,7 @@ import java.util.List;
 public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
 
     // 추천 문장
-    public String recommendMessage(List<EmotionDiary> diaryList) {
+    public String getRecommendMessage(List<EmotionDiary> diaryList) {
         if (diaryList.isEmpty()) return "오늘의 감정을 기록해보세요.";
 
         String emotion = diaryList.get(diaryList.size() - 1).getEmotion();
@@ -27,7 +27,7 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
     }
 
     // 감정 흐름
-    public String flowMessage(List<EmotionDiary> diaryList) {
+    public String getFlowMessage(List<EmotionDiary> diaryList) {
         if (diaryList.isEmpty()) return "";
 
         StringBuilder flowMessage = new StringBuilder();
@@ -39,7 +39,7 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
     }
 
     // 감정 흐름 분석
-    public String flowResult(List<EmotionDiary> diaryList) {
+    public String getFlowResult(List<EmotionDiary> diaryList) {
         if (diaryList.size() < 2) return "감정 흐름을 분석중입니다.";
 
         int firstScore = diaryList.get(0).getScore();
@@ -51,7 +51,7 @@ public class EmotionAnalysisServiceImpl implements EmotionAnalysisService {
     }
 
     // 가장 많이 나온 감정
-    public String topEmotion(List<EmotionDiary> diaryList) {
+    public String getTopEmotion(List<EmotionDiary> diaryList) {
         if (diaryList.isEmpty()) return "아직 기록된 감정이 없어요.";
 
         int happyCount = 0, excitingCount = 0, normalCount = 0;

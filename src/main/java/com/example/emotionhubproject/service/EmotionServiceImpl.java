@@ -16,7 +16,7 @@ public class EmotionServiceImpl implements EmotionService {
     private EmotionDiaryRepository repository;
 
     // 전체 조회
-    public List<EmotionDiary> getDiariesList() {
+    public List<EmotionDiary> getDiaries() {
         return repository.findAll();
     }
 

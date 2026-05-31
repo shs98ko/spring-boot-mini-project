@@ -6,7 +6,7 @@ import com.example.emotionhubproject.entity.EmotionDiary;
 import java.util.List;
 
 public interface EmotionService {
-    List<EmotionDiary> getDiariesList();
+    List<EmotionDiary> getDiaries();
 
     void saveDiary(EmotionDiaryForm emotionDiaryForm);
 }
