@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.service;
 
+import com.example.emotionhubproject.dto.EmotionDiaryForm;
 import com.example.emotionhubproject.entity.EmotionDiary;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.repository.EmotionDiaryRepository;
@@ -20,19 +21,18 @@ public class EmotionServiceImpl implements EmotionService {
     }
 
     // 저장
-    public void save(EmotionDiary diary) {
-        int score = calculateEmotionScore(diary.getEmotion());
-        diary.setScore(score);
-        repository.save(diary);
-    }
+    public void saveDiary(EmotionDiaryForm emotionDiaryForm) {
+        int score = calculateEmotionScore(emotionDiaryForm.getEmotion());
+        EmotionDiary emotionDiary = new EmotionDiary(emotionDiaryForm.getEmotion(), emotionDiaryForm.getContent(), score);
+        repository.save(emotionDiary);
 
-    // 7개 초과 시 가장 오래된 데이터 삭제
-    public void deleteOldest() {
+        // 7개 초과 시 가장 오래된 데이터 삭제
         List<EmotionDiary> diaryList = repository.findAll();
         if (diaryList.size() > 7) {
             repository.delete(diaryList.get(0));
         }
     }
+
 
     // 점수 계산
     private int calculateEmotionScore(String emotion) {

@@ -3,12 +3,12 @@ package com.example.emotionhubproject.entity;
 //EmotionDiary
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor @NoArgsConstructor @ToString
 public class EmotionDiary {
 
     @Id
@@ -21,4 +21,7 @@ public class EmotionDiary {
     private int score;
 
     private String content;
+
+    public EmotionDiary(String emotion, String content, int score) {
+    }
 }

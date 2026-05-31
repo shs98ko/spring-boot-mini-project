@@ -1,5 +1,6 @@
 package com.example.emotionhubproject.controller;
 
+import com.example.emotionhubproject.dto.EmotionDiaryForm;
 import com.example.emotionhubproject.entity.EmotionDiary;
 import com.example.emotionhubproject.exception.ErrorMessageException;
 import com.example.emotionhubproject.service.EmotionAnalysisServiceImpl;
@@ -19,33 +20,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmotionController {
 
-    @Autowired
-    private EmotionServiceImpl emotionServiceImpl;
-
-    @Autowired
-    private EmotionAnalysisServiceImpl emotionAnalysisServiceImpl;
+    private final EmotionServiceImpl emotionServiceImpl;
+    private final EmotionAnalysisServiceImpl emotionAnalysisServiceImpl;
 
     @GetMapping("/")
     public String getHome(Model model) {
         model.addAttribute("pageTitle", "오늘의 감정 기록");
 
-        List<EmotionDiary> diaryList = emotionServiceImpl.getDiariesList();
+        List<EmotionDiary> diaryList = emotionServiceImpl.getDiaries();
         model.addAttribute("diaryList", diaryList);
 
-        model.addAttribute("recommendMessage", emotionAnalysisServiceImpl.recommendMessage(diaryList));
-        model.addAttribute("flowMessage", emotionAnalysisServiceImpl.flowMessage(diaryList));
-        model.addAttribute("flowResult", emotionAnalysisServiceImpl.flowResult(diaryList));
+        model.addAttribute("recommendMessage", emotionAnalysisServiceImpl.getRecommendMessage(diaryList));
+        model.addAttribute("flowMessage", emotionAnalysisServiceImpl.getFlowMessage(diaryList));
+        model.addAttribute("flowResult", emotionAnalysisServiceImpl.getFlowResult(diaryList));
         model.addAttribute("showTopEmotion", diaryList.size() >= 3);
-        model.addAttribute("topEmotion", emotionAnalysisServiceImpl.topEmotion(diaryList));
+        model.addAttribute("topEmotion", emotionAnalysisServiceImpl.getTopEmotion(diaryList));
 
         return "home";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute EmotionDiary diary, RedirectAttributes redirectAttributes) {
+    public String save(EmotionDiaryForm emotionDiaryForm, RedirectAttributes redirectAttributes) {
         try{
-            emotionServiceImpl.save(diary);
-            emotionServiceImpl.deleteOldest();
+            emotionServiceImpl.saveDiary(emotionDiaryForm);
             return "redirect:/";}
         catch (ErrorMessageException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
