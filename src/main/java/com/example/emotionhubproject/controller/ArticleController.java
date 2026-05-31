@@ -44,18 +44,10 @@ public class ArticleController {
     @GetMapping("/post")
     public String newArticle(Model model, HttpServletRequest request,RedirectAttributes redirectAttributes) {
 
-        HttpSession session =request.getSession(false);
-        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+        UserEntity loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다.");
             return "redirect:/articles";
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
-
-        if(loginUser==null){
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
-            return "redirect:/articles";
-
         }
 
         model.addAttribute("pageTitle","Create Articles");
@@ -65,16 +57,9 @@ public class ArticleController {
     @PostMapping("/post")
     public String create(Model model, ArticleForm articleForm, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-        HttpSession session =request.getSession(false);
-        //세션 먼저 체크 (로그인 안한경우)
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
-            return "redirect:/articles";
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
-
-        if(loginUser==null){
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
+        UserEntity loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다.");
             return "redirect:/articles";
         }
 
@@ -94,9 +79,8 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String show(HttpServletRequest request, @PathVariable Long id ,Model model, RedirectAttributes redirectAttributes){
         try {
-            HttpSession session = request.getSession(false); // 세션 없으면 null 반환 (새로 만들지 않음)
-            UserEntity loginUser = session != null ? (UserEntity) session.getAttribute("user") : null; // 세션 null이면 loginUser도 null
-            boolean loggedIn = loginUser != null; // false
+            UserEntity loginUser = getLoginUser(request);
+            boolean loggedIn = loginUser != null;
 
             //article
             Article article = articleService.getArticle(id);
@@ -121,16 +105,9 @@ public class ArticleController {
     @GetMapping("/{id}/edit")
     public String editForm(HttpServletRequest request, @PathVariable Long id, Model model, RedirectAttributes redirectAttributes){
 
-        HttpSession session = request.getSession(false);
-        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
-            return "redirect:/articles";
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
-
-        //로그인 접근 제한
-        if (loginUser == null){
+        UserEntity loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다.");
             return "redirect:/articles";
         }
 
@@ -151,18 +128,12 @@ public class ArticleController {
     }
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id, HttpServletRequest request, ArticleUpdateForm articleUpdateForm, RedirectAttributes redirectAttributes){
-        HttpSession session = request.getSession(false);
-        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
-            return "redirect:/articles";
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
-
-        //로그인 접근 제한
-        if (loginUser == null){
+        UserEntity loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
             return "redirect:/articles/"+id;
         }
+
         try {
             Article article = articleService.updateArticle(articleUpdateForm, loginUser);
             return "redirect:/articles/" + article.getId();
@@ -176,16 +147,10 @@ public class ArticleController {
 
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        //세션 먼저 체크 (로그인 하지 않고 접속 하는 경우 대비)
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage","Not authorized");
-            return "redirect:/articles";
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
 
-        //로그인 접근 제한
-        if (loginUser == null){
+        UserEntity loginUser = getLoginUser(request);
+        if (loginUser == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "권한이 없습니다.");
             return "redirect:/articles";
         }
 
@@ -211,27 +176,13 @@ public class ArticleController {
 
         return "articles/index";
     }
-    /*
-    private boolean isNotLoggedIn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
-            return true;
-        }
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
-        if (loginUser == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Not authorized");
-            return true;
-        }
-        return false;
-    }
     private UserEntity getLoginUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) return null;
         return (UserEntity) session.getAttribute("user");
     }
-    */
+
 
 
 }
