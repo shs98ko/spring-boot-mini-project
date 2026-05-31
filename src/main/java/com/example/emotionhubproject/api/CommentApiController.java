@@ -2,12 +2,9 @@ package com.example.emotionhubproject.api;
 
 
 import com.example.emotionhubproject.dto.CommentForm;
-import com.example.emotionhubproject.entity.Article;
 import com.example.emotionhubproject.entity.Comment;
 import com.example.emotionhubproject.entity.UserEntity;
-import com.example.emotionhubproject.repository.ArticleRepository;
-import com.example.emotionhubproject.repository.CommentRepository;
-import com.example.emotionhubproject.service.CommentServiceImpl;
+import com.example.emotionhubproject.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,42 +20,40 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
-public class CommentApiController {
+public class  CommentApiController {
 
-    private final CommentServiceImpl commentServiceImpl;
+    private final CommentService commentService;
 
     @PostMapping("/articles/{id}/comment")
     public ResponseEntity<?> createComment(HttpServletRequest request, @PathVariable Long id, @RequestBody CommentForm commentForm){
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+        UserEntity loginUser = getLoginUser(request);
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Comment commentSaved = commentServiceImpl.createComment(id, commentForm, loginUser);
+        Comment commentSaved = commentService.createComment(id, commentForm, loginUser);
 
         //JSON형식으로 변환
         Map<String, Long> response = new HashMap<>();
         response.put("newCommentId", commentSaved.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        //return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("newCommentId", saved.getId()));
     }
     @DeleteMapping("/comments/{commentId}/delete")
     public ResponseEntity<?> deleteComment(HttpServletRequest request, @PathVariable Long commentId){
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UserEntity loginUser = (UserEntity) session.getAttribute("user");
+        UserEntity loginUser = getLoginUser(request);
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        commentServiceImpl.deleteComment(commentId, loginUser);
+        commentService.deleteComment(commentId, loginUser);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private UserEntity getLoginUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return null;
+        return (UserEntity) session.getAttribute("user");
     }
 }
