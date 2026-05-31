@@ -33,8 +33,7 @@ public class Article {
     private String username;
 
 
-    @Column(name = "created_at", updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 

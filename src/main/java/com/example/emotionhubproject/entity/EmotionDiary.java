@@ -4,6 +4,10 @@ package com.example.emotionhubproject.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -22,6 +26,17 @@ public class EmotionDiary {
 
     private String content;
 
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     public EmotionDiary(String emotion, String content, int score) {
+        this.emotion = emotion;
+        this.content = content;
+        this.score = score;
+    }
+
+    public String getFormattedCreatedAt() {
+        return createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }
